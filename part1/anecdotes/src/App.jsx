@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import Button from './Button'
+import Anecdote from './Anecdote'
 
 const App = () => {
   console.log('rendering...')
@@ -14,20 +16,28 @@ const App = () => {
   ]
 
   const [selected, setSelected] = useState(0)
+  const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0))
   console.log('selected = ', selected)
 
-  const handleAnecdote = () => {
+  const onAnecdote = () => {
     const randomIndex = Math.floor(Math.random() * anecdotes.length)
     setSelected(randomIndex)
+  }
+
+  const onVote = () => {
+    const copy = [...votes]
+    copy[selected] += 1
+    setVotes(copy)
   }
 
   return (
     <>
       <div>
-        {anecdotes[selected]}
+        <Anecdote anecdote={anecdotes[selected]} />
       </div>
       <div>
-        <button onClick={handleAnecdote}>next anecdote</button>
+        <Button onClick={onAnecdote} text='next anecdote' />
+        <Button onClick={onVote} text='vote' />
       </div>
     </>
   )
