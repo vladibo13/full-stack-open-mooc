@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import Button from './Button'
 import Anecdote from './Anecdote'
+import Header from './Header'
+import TopAnecdote from './TopAnecdote'
 
 const App = () => {
-  console.log('rendering...')
   const anecdotes = [
     'If it hurts, do it more often.',
     'Adding manpower to a late software project makes it later!',
@@ -17,7 +18,7 @@ const App = () => {
 
   const [selected, setSelected] = useState(0)
   const [votes, setVotes] = useState(new Array(anecdotes.length).fill(0))
-  console.log('selected = ', selected)
+  const [topAnecdote, setTopAnecdote] = useState(null)
 
   const onAnecdote = () => {
     const randomIndex = Math.floor(Math.random() * anecdotes.length)
@@ -28,16 +29,25 @@ const App = () => {
     const copy = [...votes]
     copy[selected] += 1
     setVotes(copy)
+
+    const maxValue = Math.max(...copy);
+    const maxIndex = copy.indexOf(maxValue);
+    setTopAnecdote(anecdotes[maxIndex])
   }
 
   return (
     <>
       <div>
+        <Header text='Anecdote of the day' />
         <Anecdote anecdote={anecdotes[selected]} />
       </div>
       <div>
         <Button onClick={onAnecdote} text='next anecdote' />
         <Button onClick={onVote} text='vote' />
+      </div>
+      <div>
+        <Header text='Anecdote with most votes' />
+        <TopAnecdote topAnecdote={topAnecdote}/>
       </div>
     </>
   )
