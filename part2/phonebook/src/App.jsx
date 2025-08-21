@@ -3,12 +3,17 @@ import Person from './components/Person'
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
+    { name: 'Arto Hellas', phoneNumber: '051-2233444' }
   ]) 
   const [newName, setNewName] = useState('')
+  const [newPhone, setNewPhoneNumber] = useState('')
 
   const onHandleNameChange = (e) => {
     setNewName(e.target.value)
+  }
+
+  const onHandlePhoneChange = (e) => {
+    setNewPhoneNumber(e.target.value)
   }
 
   const onFormSubmit = (e) => {
@@ -20,10 +25,13 @@ const App = () => {
     }
 
     const newPerson = {
-      name: newName
+      name: newName,
+      phoneNumber: newPhone
     }
+
     setPersons([...persons, newPerson])
     setNewName('')
+    setNewPhoneNumber('')
   }
 
   return (
@@ -33,6 +41,7 @@ const App = () => {
         <div>
           name: <input value={newName} onChange={onHandleNameChange} />
         </div>
+        <div>number: <input value={newPhone} onChange={onHandlePhoneChange} /></div>
         <div>
           <button type="submit">add</button>
         </div>
@@ -40,7 +49,7 @@ const App = () => {
       <h2>Numbers</h2>
       ...
       <div>debug: {newName}</div>
-      {persons.map(person => <Person key={person.name} name={person.name} />)}
+      {persons.map(person => <Person key={person.name} person={person} />)}
     </div>
   )
 }
