@@ -13,6 +13,12 @@ const App = () => {
 
   const onFormSubmit = (e) => {
     e.preventDefault()
+    const nameExist = persons.some(person => person.name === newName)
+    if(nameExist) {
+      alert(`${newName} is already added to phonebook`)
+      return
+    }
+
     const newPerson = {
       name: newName
     }
@@ -34,7 +40,7 @@ const App = () => {
       <h2>Numbers</h2>
       ...
       <div>debug: {newName}</div>
-      {persons.map(person => <Person name={person.name} />)}
+      {persons.map(person => <Person key={person.name} name={person.name} />)}
     </div>
   )
 }
