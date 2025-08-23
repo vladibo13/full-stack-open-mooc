@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Person from './components/Person'
 import axios from 'axios'
+import pesonsService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -9,10 +10,8 @@ const App = () => {
   const [search, setSearch] = useState('')
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
-      .then(res => {
-        setPersons(res.data)
-      })
+    pesonsService.get()
+      .then(res => setPersons(res.data))
   },[])
 
   const onHandleNameChange = (e) => {
@@ -35,8 +34,8 @@ const App = () => {
       name: newName,
       phoneNumber: newPhone
     }
-
-    axios.post('http://localhost:3001/persons', newPerson)
+    
+    pesonsService.create(newPerson)
       .then(res => {
         setPersons([...persons, newPerson])
         setNewName('')
