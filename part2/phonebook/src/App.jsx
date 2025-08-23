@@ -36,9 +36,12 @@ const App = () => {
       phoneNumber: newPhone
     }
 
-    setPersons([...persons, newPerson])
-    setNewName('')
-    setNewPhoneNumber('')
+    axios.post('http://localhost:3001/persons', newPerson)
+      .then(res => {
+        setPersons([...persons, newPerson])
+        setNewName('')
+        setNewPhoneNumber('')
+      })
   }
 
   const onSearchTerm = (e) => {
