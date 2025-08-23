@@ -14,7 +14,7 @@ const App = () => {
 
   useEffect(() => {
     pesonsService.get()
-      .then(res => setPersons(res.data))
+      .then(persons => setPersons(persons))
   },[])
 
   const onHandleNameChange = (e) => {
@@ -25,11 +25,30 @@ const App = () => {
     setNewPhoneNumber(e.target.value)
   }
 
+  const onDeletePerson = (id) => {
+    pesonsService.del(id)
+      .then(res => console.log(res))
+  }
+
   const onFormSubmit = (e) => {
     e.preventDefault()
-    const nameExist = persons.some(person => person.name === newName)
+    const nameExist = persons.find(person => person.name === newName)
     if(nameExist) {
-      alert(`${newName} is already added to phonebook`)
+      console.log(nameExist)
+      const confirm = window.confirm(`${newName} is already added to phonebook
+            replace the old number with new one?
+        `)
+      if(!confirm) return 
+      const updatedPerson = pesonsService.update(nameExist.id, {
+        ...nameExist,
+        number: newPhone
+      }).then(person => {
+        const newPersons = persons.filter(p => p.id !== person.id)
+        setPersons([...newPersons, person])
+        setNewName('')
+        setNewPhoneNumber('')
+      })  
+
       return
     }
 
@@ -39,8 +58,8 @@ const App = () => {
     }
 
     pesonsService.create(newPerson)
-      .then(res => {
-        setPersons([...persons, newPerson])
+      .then(person => {
+        setPersons([...persons, person])
         setNewName('')
         setNewPhoneNumber('')
       })
@@ -67,7 +86,7 @@ const App = () => {
       <h2>Numbers</h2>
       ...
       <div>debug: {newName}</div>
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} onDeletePerson={onDeletePerson} />
     </div>
   )
 }
