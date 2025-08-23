@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react'
 import Person from './components/Person'
 import axios from 'axios'
 import pesonsService from './services/persons'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -32,9 +35,9 @@ const App = () => {
 
     const newPerson = {
       name: newName,
-      phoneNumber: newPhone
+      number: newPhone
     }
-    
+
     pesonsService.create(newPerson)
       .then(res => {
         setPersons([...persons, newPerson])
@@ -52,23 +55,19 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        <input value={search} onChange={onSearchTerm}/>
-      </div>
+      <Filter search={search} onSearchTerm={onSearchTerm}/>
       <h2>add new</h2>
-      <form onSubmit={onFormSubmit}>
-        <div>
-          name: <input value={newName} onChange={onHandleNameChange} />
-        </div>
-        <div>number: <input value={newPhone} onChange={onHandlePhoneChange} /></div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm
+        onFormSubmit={onFormSubmit}
+        onHandleNameChange={onHandleNameChange}
+        onHandlePhoneChange={onHandlePhoneChange}
+        newName={newName}
+        newPhone={newPhone}
+      />
       <h2>Numbers</h2>
       ...
       <div>debug: {newName}</div>
-      {filteredPersons.map(person => <Person key={person.name} person={person} />)}
+      <Persons persons={filteredPersons} />
     </div>
   )
 }
