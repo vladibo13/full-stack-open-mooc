@@ -5,12 +5,14 @@ import pesonsService from './services/persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newPhone, setNewPhoneNumber] = useState('')
   const [search, setSearch] = useState('')
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     pesonsService.get()
@@ -60,6 +62,12 @@ const App = () => {
     pesonsService.create(newPerson)
       .then(person => {
         setPersons([...persons, person])
+
+        setNotification(`Added ${newName}`)
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
+
         setNewName('')
         setNewPhoneNumber('')
       })
@@ -74,6 +82,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification}/>
       <Filter search={search} onSearchTerm={onSearchTerm}/>
       <h2>add new</h2>
       <PersonForm
@@ -84,8 +93,8 @@ const App = () => {
         newPhone={newPhone}
       />
       <h2>Numbers</h2>
-      ...
-      <div>debug: {newName}</div>
+      <div>debug: {newName} {newPhone}</div>
+       ...
       <Persons persons={filteredPersons} onDeletePerson={onDeletePerson} />
     </div>
   )
