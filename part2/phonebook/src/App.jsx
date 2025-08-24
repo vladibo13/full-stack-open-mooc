@@ -30,6 +30,14 @@ const App = () => {
   const onDeletePerson = (id) => {
     pesonsService.del(id)
       .then(res => console.log(res))
+      .catch(err => {
+        console.log(err)
+        const user = persons.find(p => p.id === id)
+        setNotification(
+          `Error: Information of ${user.name}' was already deleted from server`
+        )
+        setPersons(persons.filter(p => p.id !== id))
+      })
   }
 
   const onFormSubmit = (e) => {

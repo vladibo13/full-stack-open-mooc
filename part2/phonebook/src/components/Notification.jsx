@@ -6,8 +6,10 @@ const Notification = ({message}) => {
     return null
   }  
   console.log(message)  
+  const isError = message.toLowerCase().includes("error")
+
   return (
-    <div className='notification'>
+    <div className={`notification ${isError ? "error" : "success"}`}>
       {message}
     </div>
   )
