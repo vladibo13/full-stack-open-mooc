@@ -46,9 +46,16 @@ app.get('/api/persons/:id', (req, res) => {
 })
 
 app.post('/api/persons', (req, res) => {
+  const {name, number} = req.body
+  const exist = persons.find(p => p.name === name)
+  if(exist || (!name || !number)) {
+    return res.status(400).json({error:'name must be unique'})
+  }
+
   const person = {
-     id: Math.floor(Math.random() * 1000000000),
-    ...req.body
+    id: Math.floor(Math.random() * 1000000000),
+    name,
+    number
   }
   persons.push(person)
 
