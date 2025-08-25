@@ -32,15 +32,17 @@ app.get('/api/persons', (req, res) => {
   res.json(persons)
 })
 
-// app.get('/api/info', (req, res) => {
-//   res.send(
-//     `
-//         <div>
-//             <p>PhoneBook has infor for ${persons.length} people</p>
-//         </div>
-//     `
-//   )
-// })
+app.get('/api/info', (req, res) => {
+  const date = new Date()
+  res.send(
+    `
+        <div>
+            <p>PhoneBook has info for ${persons.length} people</p>
+            <p>${date}</p>
+        </div>
+    `
+  )
+})
 
 const PORT = 3001
 app.listen(PORT, () => {
