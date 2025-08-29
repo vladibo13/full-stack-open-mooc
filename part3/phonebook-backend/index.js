@@ -1,7 +1,9 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
 const cors = require('cors')
+const PhoneBook = require('./models/phonebook')
 
 app.use(express.json())
 
@@ -45,7 +47,9 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/persons', (req, res) => {
-  res.json(persons)
+  PhoneBook.find().then(persons => {
+    res.json(persons)
+  })
 })
 
 app.get('/api/persons/:id', (req, res) => {
@@ -61,19 +65,17 @@ app.get('/api/persons/:id', (req, res) => {
 
 app.post('/api/persons', (req, res) => {
   const {name, number} = req.body
-  const exist = persons.find(p => p.name === name)
-  if(exist || (!name || !number)) {
-    return res.status(400).json({error:'name must be unique'})
+
+  if (!name || !number) {
+    return response.status(400).json({ error: 'content missing' })
   }
 
-  const person = {
-    id: Math.floor(Math.random() * 1000000000),
+  const phonebook = new PhoneBook({
     name,
     number
-  }
-  persons.push(person)
-
-  res.json(person)
+  })
+  
+  phonebook.save().then(savedPerson => res.json(savedPerson))
 })
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -95,7 +97,7 @@ app.get('/api/info', (req, res) => {
   )
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3002
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
