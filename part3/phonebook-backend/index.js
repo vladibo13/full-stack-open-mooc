@@ -43,7 +43,7 @@ app.use(cors())
 app.use(express.static('dist'))
 
 app.get('/', (req, res) => {
-  response.send('<h1>Hello World!</h1>')
+  res.send('<h1>Hello World!</h1>')
 })
 
 app.get('/api/persons', (req, res) => {
@@ -67,7 +67,7 @@ app.post('/api/persons', (req, res) => {
   const {name, number} = req.body
 
   if (!name || !number) {
-    return response.status(400).json({ error: 'content missing' })
+    return res.status(400).json({ error: 'content missing' })
   }
 
   const phonebook = new PhoneBook({
@@ -78,13 +78,33 @@ app.post('/api/persons', (req, res) => {
   phonebook.save().then(savedPerson => res.json(savedPerson))
 })
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
   const id = req.params.id
   PhoneBook.findByIdAndDelete(id)
     .then(result => {
-      response.status(204).end()
+      res.status(204).end()
     })
     .catch(error => next(error))
+})
+
+app.put('/api/persons/:id', (req, res, next) => {
+  const { name, number } = request.body
+  const {id} = req.params
+  
+  PhoneBook.findById(id)
+    .then(phonebook => {
+      if (!phonebook) {
+        return res.status(404).end()
+      }
+
+      phonebook.name = name
+      phonebook.number = number
+
+      return phonebook.save().then((updatedPhonebook) => {
+        res.json(updatedPhonebook)
+      })
+    })
+    .catch(e => next(e))
 })
 
 app.get('/api/info', (req, res) => {
@@ -99,6 +119,13 @@ app.get('/api/info', (req, res) => {
   )
 })
 
+
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+app.use(unknownEndpoint)
+
 const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
@@ -108,12 +135,6 @@ const errorHandler = (error, request, response, next) => {
 
   next(error)
 }
-
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' })
-}
-
-app.use(unknownEndpoint)
 app.use(errorHandler)
 
 const PORT = process.env.PORT || 3002
