@@ -52,15 +52,19 @@ app.get('/api/persons', (req, res) => {
   })
 })
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
   const id = req.params.id
-  const person = persons.find(p => p.id === id)  
 
-  if(person) {
-    res.json(person)
-  } else {
-    res.status(404).end()
-  }
+  PhoneBook.findById(id)
+    .then(phonebook => {
+      if(phonebook) {
+        res.json(phonebook)
+      } else {
+        res.status(404).end()
+      }
+    })
+    .catch(e => next(e))
+  const person = persons.find(p => p.id === id)  
 })
 
 app.post('/api/persons', (req, res) => {
@@ -90,7 +94,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
 app.put('/api/persons/:id', (req, res, next) => {
   const { name, number } = request.body
   const {id} = req.params
-  
+
   PhoneBook.findById(id)
     .then(phonebook => {
       if (!phonebook) {
