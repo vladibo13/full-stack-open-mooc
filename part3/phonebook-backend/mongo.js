@@ -12,30 +12,30 @@ mongoose.set('strictQuery',false)
 mongoose.connect(url)
 
 const phonebookSchema = new mongoose.Schema({
-    name: String,
-    number: String,
+  name: String,
+  number: String,
 })
 
 const PhoneBook = mongoose.model('PhoneBook', phonebookSchema)
 
 if (process.argv.length === 3) {
-    PhoneBook.find({}).then(result => {
-        result.forEach(phoneBook => {
-            console.log(phoneBook)
-        })
-        mongoose.connection.close()
+  PhoneBook.find({}).then(result => {
+    result.forEach(phoneBook => {
+      console.log(phoneBook)
     })
+    mongoose.connection.close()
+  })
 } else if(process.argv.length === 5) {
-    const name = process.argv[3]
-    const number = process.argv[4]
+  const name = process.argv[3]
+  const number = process.argv[4]
 
-    const phoneBook = new PhoneBook({
-        name,
-        number
-    })
+  const phoneBook = new PhoneBook({
+    name,
+    number
+  })
 
-    phoneBook.save().then(result => {
-        console.log(`added ${name} number ${number} to phonebook`)
-        mongoose.connection.close()
-    })
+  phoneBook.save().then(() => {
+    console.log(`added ${name} number ${number} to phonebook`)
+    mongoose.connection.close()
+  })
 }
