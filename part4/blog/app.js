@@ -1,13 +1,12 @@
 require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
-const Blog = require('./models/blog')
 const blogRouter = require('./controllers/blog')
+const config = require('./utils/config')
 
 const app = express()
-const mongoUrl = process.env.MONGO_URI
 
-mongoose.connect(mongoUrl)
+mongoose.connect(config.MONGODB_URI)
     .then(() => console.log('connected'))
     .catch(e => console.log(e.message))
 
