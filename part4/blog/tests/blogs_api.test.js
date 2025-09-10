@@ -50,6 +50,19 @@ test('create a new blog', async () => {
   assert.strictEqual(count, 2);
 })
 
+test('create a new blog without likes', async () => {
+  const response = await api.post('/api/blogs').send({
+    "title": "title",
+    "author": "author",
+    "url": "url"
+  })
+  .set('Accept', 'application/json')
+  .expect('Content-Type', /json/)
+  .expect(201)
+
+  assert.strictEqual(response.body.likes, 0)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
