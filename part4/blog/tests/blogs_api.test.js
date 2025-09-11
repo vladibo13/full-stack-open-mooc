@@ -63,6 +63,15 @@ test('create a new blog without likes', async () => {
   assert.strictEqual(response.body.likes, 0)
 })
 
+test('create a new blog without title and url', async () => {
+  await api.post('/api/blogs').send({
+    "author": "author",
+    "likes": 1
+  })
+  .expect(400)
+
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
