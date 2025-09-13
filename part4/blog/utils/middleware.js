@@ -24,7 +24,22 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
+const tokenExtractor = (req, res, next) => {
+  // code that extracts the token
+  const authorization = req.get('authorization')
+  logger.info(authorization)
+  if (authorization && authorization.startsWith('Bearer ')) {
+    logger.info(authorization)
+    req.token = authorization.replace('Bearer ', '')
+  } else {
+    req.token = null
+  }
+
+  next()
+}
+
 module.exports = {
   unknownEndpoint,
   errorHandler,
+  tokenExtractor
 }
