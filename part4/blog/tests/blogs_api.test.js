@@ -4,13 +4,30 @@ const supertest = require('supertest')
 const app = require('../app')
 const assert = require('node:assert')
 const Blog = require('../models/blog')
+const User = require('../models/users')
 
 const api = supertest(app)
+let token = null
 
 beforeEach(async () => {
   await Blog.deleteMany({})
-  let blogObject = new Blog({ title: 'Test blog', author: 'Tester', url: 'http://example.com', likes: 1 })
+  const blogObject = new Blog({ title: 'Test blog', author: 'Tester', url: 'http://example.com', likes: 1 })
   await blogObject.save()
+
+  await User.deleteMany({})
+  const user = new User({
+    "username": "test", 
+    "name": "test", 
+    "password": "test"
+  })
+  await user.save()
+
+  const authUser = await api.post('/api/login').send({
+    "username": "test",
+    "password": "test"
+  }).set('Accept', 'application/json')
+  console.log('authUser.body.token. ========== ' + JSON.stringify(authUser))
+  token = authUser.body.token
 })
 
 test('blogs are returned as json', async () => {
@@ -30,6 +47,9 @@ test('verify id', async () => {
 })
 
 test('create a new blog', async () => {
+
+
+  
   const response = await api.post('/api/blogs').send({
     "title": "title",
     "author": "author",
@@ -37,6 +57,7 @@ test('create a new blog', async () => {
     "likes": 3
   })
   .set('Accept', 'application/json')
+  .set('Authorization', token)
   .expect('Content-Type', /json/)
   .expect(201)
 

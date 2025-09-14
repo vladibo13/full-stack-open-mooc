@@ -2,10 +2,11 @@ const User = require('../models/users')
 const bcrypt = require('bcrypt')
 const loginRouter = require('express').Router()
 const jwt = require('jsonwebtoken')
+const logger = require('../utils/logger')
 
 loginRouter.post('/', async(req,res) => {
     const {username, password} = req.body
-    
+    logger.info(username, password)
     const user = await User.findOne({username})
     const passwordCorrect = user === null
     ? false
