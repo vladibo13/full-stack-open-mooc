@@ -1,4 +1,4 @@
-const Blog = ({ blog }) => (
+const Blog = ({ blog, user }) => (
   <div>
     {blog.title} {blog.author}
   </div>  

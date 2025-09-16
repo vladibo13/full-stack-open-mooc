@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -23,6 +24,7 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 
@@ -39,6 +41,7 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      blogService.setToken(user.token)
     } catch {
       setErrorMessage('wrong credentials')
       setTimeout(() => {
@@ -78,12 +81,64 @@ const App = () => {
     )
   }
 
+  const logOut = () => {
+    window.localStorage.removeItem('loggedBlogappUser')
+    setUser(null)
+  }
+
+  const loggedTitle = () => {
+    return(
+      <div>
+        <b>{user.name} is logged in </b>
+        <button onClick={logOut}>logg out</button>
+      </div>
+    )
+  }
+
+  const handleAddBlog = async (blog) => {
+    console.log('New blog added:', blog)
+    // here you can call an API to save it, etc.
+    try {
+      const savedBlog = await blogService.create(blog)
+      setBlogs([...blogs, savedBlog])
+      console.log(savedBlog)
+      setErrorMessage('Blog created successfully!')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    } catch (error) {
+      setErrorMessage('Failed to create blog')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+   
+  }
+
+  // const createBlog = () => {
+  //   return (
+
+  //   )
+  // }
+
+  if(user === null) {
+    return (
+      <>
+        {errorMessage}
+        {loginForm()}
+      </>      
+    )
+  }
+
   return (
     <div>
       <h2>blogs</h2>
-      {!user && loginForm()}
-      {user && blogs.map(blog =>
+      <BlogForm onAddBlog={handleAddBlog}/>
+      {errorMessage}
+      {loggedTitle()}
+      {blogs.map(blog => <>
         <Blog key={blog.id} blog={blog} />
+        </>
       )}
     </div>
   )

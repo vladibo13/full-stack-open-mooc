@@ -27,7 +27,11 @@ blogRouter.post('/', async (req, res) => {
   })
 
   const createdBlog = await blog.save()
-  res.status(201).json(createdBlog)
+  res.status(201).json({createdBlog: {
+    title: createdBlog.title,
+    author: createdBlog.author,
+    url: createdBlog.url
+  }})
 })
 
 blogRouter.delete('/:id', async(req, res) => {
