@@ -1,10 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
-import Blog from './components/Blog'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
+
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
+import Header from './components/Header'
+import BlogList from './components/BlogList'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -58,15 +61,6 @@ const App = () => {
     setUser(null)
   }
 
-  const loggedTitle = () => {
-    return(
-      <div>
-        <b>{user.name} is logged in </b>
-        <button onClick={logOut}>logg out</button>
-      </div>
-    )
-  }
-
   const handleAddBlog = async (blog) => {
     try {
       blogFromRef.current.toggleVisibility()
@@ -108,11 +102,8 @@ const App = () => {
         <BlogForm onAddBlog={handleAddBlog}/>
       </Togglable>
       {errorMessage}
-      {loggedTitle()}
-      {blogs.map(blog => <>
-        <Blog key={blog.id} blog={blog} />
-        </>
-      )}
+      <Header name={user.name} logOut={logOut} />
+      <BlogList blogs={blogs}/>
     </div>
   )
 }
