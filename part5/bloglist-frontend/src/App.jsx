@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import BlogForm from './components/BlogForm'
+import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -10,6 +12,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
+  const blogFromRef = useRef()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,37 +53,6 @@ const App = () => {
     }
   }
 
-  const loginForm = () => {
-    return(
-      <div>
-        <h3>log in to application</h3>
-        <form onSubmit={handleLogin}>
-          <div>
-            <label>
-              username
-              <input
-                type="text"
-                value={username}
-                onChange={({ target }) => setUsername(target.value)}
-              />
-            </label>
-          </div>
-          <div>
-            <label>
-              password
-              <input
-                type="password"
-                value={password}
-                onChange={({ target }) => setPassword(target.value)}
-              />
-            </label>
-          </div>
-          <button type="submit">login</button>
-        </form>        
-      </div>
-    )
-  }
-
   const logOut = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUser(null)
@@ -96,9 +68,8 @@ const App = () => {
   }
 
   const handleAddBlog = async (blog) => {
-    console.log('New blog added:', blog)
-    // here you can call an API to save it, etc.
     try {
+      blogFromRef.current.toggleVisibility()
       const savedBlog = await blogService.create(blog)
       setBlogs([...blogs, savedBlog])
       console.log(savedBlog)
@@ -115,17 +86,17 @@ const App = () => {
    
   }
 
-  // const createBlog = () => {
-  //   return (
-
-  //   )
-  // }
-
   if(user === null) {
     return (
       <>
         {errorMessage}
-        {loginForm()}
+        <LoginForm
+          username={username}
+          password={password}
+          handleLogin={handleLogin}
+          handleUserName={({ target }) => setUsername(target.value)}
+          handlePassword={({ target }) => setPassword(target.value)}
+        />
       </>      
     )
   }
@@ -133,7 +104,9 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <BlogForm onAddBlog={handleAddBlog}/>
+      <Togglable buttonLabel="create new blog" ref={blogFromRef}>
+        <BlogForm onAddBlog={handleAddBlog}/>
+      </Togglable>
       {errorMessage}
       {loggedTitle()}
       {blogs.map(blog => <>
