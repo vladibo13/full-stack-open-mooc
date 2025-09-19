@@ -10,7 +10,7 @@ const Blog = ({ blog, user, handleLike }) => {
     borderWidth: 1,
     marginBottom: 5
   }
-  const handleView = () => setView(!view)
+  const handleView = () => setView(prev => !prev)
 
   const handleOnClick = (e) => {
     e.preventDefault()
@@ -39,7 +39,7 @@ const Blog = ({ blog, user, handleLike }) => {
               <li>url: {blog.title}</li>
               <li>likes: {blog.likes} <button onClick={handleOnClick}>like</button></li>
             </ul>
-            <button onClick={handleOnClick}>hide</button>
+            <button onClick={handleView}>hide</button>
           </div>  
          )}
         

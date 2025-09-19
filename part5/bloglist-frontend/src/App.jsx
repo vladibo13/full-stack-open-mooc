@@ -85,8 +85,8 @@ const App = () => {
       const blogToUpdate = { ...blog, likes: blog.likes + 1 }
       await blogService.update(blogToUpdate)
 
-      const updatedBlogs = blogs.map(b => b.id === blog.id ? updatedBlog : b)
-      console.log(updatedBlog)
+      const updatedBlogs = blogs.map(b => b.id === blog.id ? blogToUpdate : b)
+      console.log(updatedBlogs)
       setBlogs(updatedBlogs)
       setErrorMessage('Blog updated successfully!')
       setTimeout(() => {
@@ -94,6 +94,8 @@ const App = () => {
       }, 5000)
     } catch (error) {
       setErrorMessage('Failed to create blog')
+      console.log(error.message);
+      
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
