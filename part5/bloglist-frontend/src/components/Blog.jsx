@@ -38,6 +38,7 @@ const Blog = ({ blog, user, handleLike }) => {
             <ul>
               <li>url: {blog.title}</li>
               <li>likes: {blog.likes} <button onClick={handleOnClick}>like</button></li>
+              <li>user: {blog.user.name}</li>
             </ul>
             <button onClick={handleView}>hide</button>
           </div>  

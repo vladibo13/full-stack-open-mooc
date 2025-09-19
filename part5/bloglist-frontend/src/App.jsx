@@ -85,7 +85,7 @@ const App = () => {
       const blogToUpdate = { ...blog, likes: blog.likes + 1 }
       await blogService.update(blogToUpdate)
 
-      const updatedBlogs = blogs.map(b => b.id === blog.id ? blogToUpdate : b)
+      const updatedBlogs = await blogService.getAll()
       console.log(updatedBlogs)
       setBlogs(updatedBlogs)
       setErrorMessage('Blog updated successfully!')
