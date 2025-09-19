@@ -39,7 +39,7 @@ blogRouter.delete('/:id', async(req, res) => {
   const user = req.user
 
   if (!user || !blog) {
-    return res.status(401).json({ error: 'UserId missing or blog' })
+    return res.status(401).json({ error:`UserId = ${user} missing or blog ${blog}` })
   }
 
   if(blog.user.toString() !== user.id.toString()) {

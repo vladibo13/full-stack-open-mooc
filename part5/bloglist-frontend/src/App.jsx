@@ -64,14 +64,15 @@ const App = () => {
   const handleAddBlog = async (blog) => {
     try {
       blogFromRef.current.toggleVisibility()
-      const savedBlog = await blogService.create(blog)
-      setBlogs([...blogs, savedBlog])
-      console.log(savedBlog)
+      await blogService.create(blog)
+      const newBlogs = await blogService.getAll()
+      setBlogs(newBlogs)
       setErrorMessage('Blog created successfully!')
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
     } catch (error) {
+      console.error(error.message)
       setErrorMessage('Failed to create blog')
       setTimeout(() => {
         setErrorMessage(null)
@@ -92,6 +93,20 @@ const App = () => {
       setTimeout(() => {
         setErrorMessage(null)
       }, 5000)
+    } catch (error) {
+      setErrorMessage('Failed to create blog')
+      console.log(error.message);
+      
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
+  const handleDelete = async(id) => {
+    try {
+      await blogService.deleteBlog(id)
+      setBlogs(blogs.filter(blog => blog.id !== id))
     } catch (error) {
       setErrorMessage('Failed to create blog')
       console.log(error.message);
@@ -125,7 +140,7 @@ const App = () => {
       </Togglable>
       {errorMessage}
       <Header name={user.name} logOut={logOut} />
-      <BlogList blogs={blogs} handleLike={handleLike}/>
+      <BlogList blogs={blogs} handleLike={handleLike} handleDelete={handleDelete}/>
     </div>
   )
 }

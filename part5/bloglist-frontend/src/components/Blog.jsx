@@ -1,7 +1,7 @@
 import { useState } from "react"
 import Togglable from "./Togglable"
 
-const Blog = ({ blog, user, handleLike }) => {
+const Blog = ({ blog, user, handleLike, handleDelete }) => {
   const [view, setView] = useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -26,6 +26,10 @@ const Blog = ({ blog, user, handleLike }) => {
     console.log('blogToUpdate = ', blogToUpdate)
     handleLike(blogToUpdate)
   }
+
+  const handleOnDelte = (id) => {
+    handleDelete(id)
+  }
   console.log(blog)
   return (
       <div style={blogStyle}>
@@ -41,6 +45,7 @@ const Blog = ({ blog, user, handleLike }) => {
               <li>user: {blog.user.name}</li>
             </ul>
             <button onClick={handleView}>hide</button>
+            <button onClick={() => handleOnDelte(blog.id)}>remove</button>
           </div>  
          )}
         
