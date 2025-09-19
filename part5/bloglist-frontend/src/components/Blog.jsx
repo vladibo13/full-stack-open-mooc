@@ -1,7 +1,7 @@
 import { useState } from "react"
 import Togglable from "./Togglable"
 
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog, user, handleLike }) => {
   const [view, setView] = useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -12,6 +12,21 @@ const Blog = ({ blog, user }) => {
   }
   const handleView = () => setView(!view)
 
+  const handleOnClick = (e) => {
+    e.preventDefault()
+    
+    const blogToUpdate = {
+      user: blog.user.id,
+      likes: blog.likes,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url,
+      id: blog.id
+    }
+    console.log('blogToUpdate = ', blogToUpdate)
+    handleLike(blogToUpdate)
+  }
+  console.log(blog)
   return (
       <div style={blogStyle}>
         <span>{blog.title} - {blog.author}</span>
@@ -22,9 +37,9 @@ const Blog = ({ blog, user }) => {
           <div>  
             <ul>
               <li>url: {blog.title}</li>
-              <li>likes: {blog.likes}</li>
+              <li>likes: {blog.likes} <button onClick={handleOnClick}>like</button></li>
             </ul>
-            <button onClick={handleView}>hide</button>
+            <button onClick={handleOnClick}>hide</button>
           </div>  
          )}
         

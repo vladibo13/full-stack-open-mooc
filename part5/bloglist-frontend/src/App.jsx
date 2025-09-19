@@ -80,6 +80,26 @@ const App = () => {
    
   }
 
+  const handleLike = async(blog) => {
+    try {
+      const blogToUpdate = { ...blog, likes: blog.likes + 1 }
+      await blogService.update(blogToUpdate)
+
+      const updatedBlogs = blogs.map(b => b.id === blog.id ? updatedBlog : b)
+      console.log(updatedBlog)
+      setBlogs(updatedBlogs)
+      setErrorMessage('Blog updated successfully!')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    } catch (error) {
+      setErrorMessage('Failed to create blog')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
+
   if(user === null) {
     return (
       <>
@@ -103,7 +123,7 @@ const App = () => {
       </Togglable>
       {errorMessage}
       <Header name={user.name} logOut={logOut} />
-      <BlogList blogs={blogs}/>
+      <BlogList blogs={blogs} handleLike={handleLike}/>
     </div>
   )
 }

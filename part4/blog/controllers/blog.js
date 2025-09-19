@@ -53,9 +53,15 @@ blogRouter.delete('/:id', async(req, res) => {
 })
 
 blogRouter.put('/:id', async(req, res) => {
-  const {title, author, url,likes} = req.body
+  const userReq = req.user
+
+  if (!userReq) {
+    return res.status(401).json({ error: 'UserId missing or not valid' })
+  }
+
+  const {title, author, url,likes, user} = req.body
   const updatedBlog = await Blog
-    .findByIdAndUpdate(req.params.id, {title, author, url, likes}, {new: true})
+    .findByIdAndUpdate(req.params.id, {title, author, url, likes, user}, {new: true})
 
   res.json(updatedBlog)  
   
