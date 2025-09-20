@@ -32,13 +32,13 @@ const Blog = ({ blog, user, handleLike, handleDelete }) => {
   }
   console.log(blog)
   return (
-      <div style={blogStyle}>
+      <div className="blog" style={blogStyle}>
         <span>{blog.title} - {blog.author}</span>
         {!view ? (
           <button onClick={handleView}>view</button>
         )
          :(
-          <div>  
+          <div className="blog-details">  
             <ul>
               <li>url: {blog.title}</li>
               <li>likes: {blog.likes} <button onClick={handleOnClick}>like</button></li>
