@@ -73,26 +73,26 @@ test('clicking like button twice calls event handler twice', async () => {
   expect(mockHandler.mock.calls).toHaveLength(2)
 })
 
-  test('calls onAddBlog with correct details when new blog is created', async () => {
-    const createBlog = vi.fn()
-    const user = userEvent.setup()
+test('calls onAddBlog with correct details when new blog is created', async () => {
+  const createBlog = vi.fn()
+  const user = userEvent.setup()
 
-    render(<BlogForm onAddBlog={createBlog} />)
+  render(<BlogForm onAddBlog={createBlog} />)
 
-    const titleInput = screen.getByPlaceholderText('Enter blog title')
-    const authorInput = screen.getByPlaceholderText('Enter author name')
-    const urlInput = screen.getByPlaceholderText('Enter blog URL')
-    const createButton = screen.getByText('Add Blog')
+  const titleInput = screen.getByPlaceholderText('Enter blog title')
+  const authorInput = screen.getByPlaceholderText('Enter author name')
+  const urlInput = screen.getByPlaceholderText('Enter blog URL')
+  const createButton = screen.getByText('Add Blog')
 
-    await user.type(titleInput, 'Test Title')
-    await user.type(authorInput, 'Test Author')
-    await user.type(urlInput, 'http://test.com')
-    await user.click(createButton)
+  await user.type(titleInput, 'Test Title')
+  await user.type(authorInput, 'Test Author')
+  await user.type(urlInput, 'http://test.com')
+  await user.click(createButton)
 
-    expect(createBlog.mock.calls).toHaveLength(1)
-    expect(createBlog.mock.calls[0][0]).toEqual({
-      title: 'Test Title',
-      author: 'Test Author',
-      url: 'http://test.com'
-    })
+  expect(createBlog.mock.calls).toHaveLength(1)
+  expect(createBlog.mock.calls[0][0]).toEqual({
+    title: 'Test Title',
+    author: 'Test Author',
+    url: 'http://test.com'
   })
+})
