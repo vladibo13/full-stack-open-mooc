@@ -3,14 +3,15 @@ import { increment } from '../reducers/anecdoteReducer'
 
 const AnecdoteList = () => {
   const anecdotes = useSelector(state => {
-    const filter = state.filter.toLowerCase()
-    if ( state.filter === 'ALL' ) {
+
+    if (!state.filter || state.filter === 'ALL') {
       return state.anecdotes
-    } else {
-      return state.anecdotes.filter(a => a.content.toLowerCase().includes(filter))
     }
+    const filter = state.filter.toLowerCase()
+    return state.anecdotes.filter(a => a.content.toLowerCase().includes(filter))
+
   })
-  const filter = useSelector(state => state.filter)
+  // const filter = useSelector(state => state.filter)
   const dispatch = useDispatch()
 
   // const parsedFilter = filter.trim().toLowerCase()

@@ -20,47 +20,71 @@ const asObject = (anecdote) => {
 }
 
 const initialState = anecdotesAtStart.map(asObject)
-
-const reducer = (state = initialState, action) => {
-  console.log('state now: ', state)
-  console.log('action', action)
-  switch (action.type) {
-    case 'INCREMENT':
-      const id = action.payload.id
+const anecdoteSlice = createSlice({
+  name: 'anecdotes',
+  initialState,
+  reducers: {
+    increment(state, action) {
+      
+      const id = action.payload
       const anecdoteToChange = state.find(a => a.id === id)
-      const changeAnecdote = {
-        ...anecdoteToChange,
-        votes: anecdoteToChange.votes + 1
+
+      if (anecdoteToChange) {
+        anecdoteToChange.votes += 1
       }
-      return state
-        .slice()
-        .sort((a, b) => b.votes - a.votes)
-        .map(anecdote => anecdote.id !== id ? anecdote : changeAnecdote)
-    case 'ADD':
-      return [...state, action.payload]
-    default:
-      return state
-  }
-}
 
-export const increment = (id) => {
-  return {
-    type: 'INCREMENT',
-    payload: {
-      id
+      state.sort((a, b) => b.votes - a.votes)  
+    },
+    add(state, action) {
+      state.push(action.payload)
     }
   }
-}
+})
 
-export const add = (content) => {
-  return {
-    type: 'ADD',
-    payload: {
-      content,
-      id: getId(),
-      votes: 0
-    }
-  }
-}
 
-export default reducer
+export const {increment,add} = anecdoteSlice.actions
+export default anecdoteSlice.reducer
+
+// export const increment = (id) => {
+//   return {
+//     type: 'INCREMENT',
+//     payload: {
+//       id
+//     }
+//   }
+// }
+
+// export const add = (content) => {
+//   return {
+//     type: 'ADD',
+//     payload: {
+//       content,
+//       id: getId(),
+//       votes: 0
+//     }
+//   }
+// }
+
+// export default reducer
+
+// const reducer = (state = initialState, action) => {
+//   console.log('state now: ', state)
+//   console.log('action', action)
+//   switch (action.type) {
+//     case 'INCREMENT':
+//       const id = action.payload.id
+//       const anecdoteToChange = state.find(a => a.id === id)
+//       const changeAnecdote = {
+//         ...anecdoteToChange,
+//         votes: anecdoteToChange.votes + 1
+//       }
+//       return state
+//         .slice()
+//         .sort((a, b) => b.votes - a.votes)
+//         .map(anecdote => anecdote.id !== id ? anecdote : changeAnecdote)
+//     case 'ADD':
+//       return [...state, action.payload]
+//     default:
+//       return state
+//   }
+// }

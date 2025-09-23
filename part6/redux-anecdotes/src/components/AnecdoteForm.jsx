@@ -8,8 +8,13 @@ const AnecdoteForm = () => {
     const addAnecdote = (e) => {
         e.preventDefault()
         const content = e.target.anecdote.value
+        const newAnecdote = {
+            content,
+            id: (100000 * Math.random()).toFixed(0),
+            votes: 0
+        }
         e.target.anecdote.value = ''
-        dispatch(add(content))
+        dispatch(add(newAnecdote))
     }
 
     return (
