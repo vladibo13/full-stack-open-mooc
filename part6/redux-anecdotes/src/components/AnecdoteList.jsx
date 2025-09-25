@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { increment } from '../reducers/anecdoteReducer'
+import { increment, voteDBUpdate } from '../reducers/anecdoteReducer'
 import { notification } from '../reducers/notificationReducer'
 
 const AnecdoteList = () => {
@@ -18,12 +18,11 @@ const AnecdoteList = () => {
   // const parsedFilter = filter.trim().toLowerCase()
 
   const vote = (anecdote) => {
-    const id = anecdote.id
-    dispatch(increment(id))
-    dispatch(notification('you voted for ' + anecdote.content))
-    setTimeout(() => {
-      dispatch(notification(''))
-    }, 5000)
+    dispatch(voteDBUpdate(anecdote))
+    // dispatch(notification('you voted for ' + anecdote.content))
+    // setTimeout(() => {
+    //   dispatch(notification(''))
+    // }, 5000)
   }
 
   return (
